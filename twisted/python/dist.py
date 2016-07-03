@@ -193,17 +193,19 @@ def getExtensions():
             ["twisted/internet/iocpreactor/iocpsupport/iocpsupport.c",
              "twisted/internet/iocpreactor/iocpsupport/winsock_pointers.c"],
             libraries=["ws2_32"],
-            condition=lambda _: _isCPython and sys.platform == "win32"),
+            condition=lambda _: not _PY3 and
+                                _isCPython and sys.platform == "win32"),
 
         ConditionalExtension(
             "twisted.python._sendmsg",
             sources=["twisted/python/_sendmsg.c"],
-            condition=lambda _: sys.platform != "win32"),
+            condition=lambda _: not _PY3 and sys.platform != "win32"),
 
         ConditionalExtension(
             "twisted.runner.portmap",
             ["twisted/runner/portmap.c"],
-            condition=lambda builder: builder._check_header("rpc/rpc.h")),
+            condition=lambda builder: not _PY3 and
+                                      builder._check_header("rpc/rpc.h")),
     ]
 
     return extensions
